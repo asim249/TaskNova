@@ -14,7 +14,7 @@ connectDB()
 
 
 app.use(cors({
-    origin: 'http://localhost:3000', 
+    origin: "https://task-nova.onrender.com", 
     credentials: true              
 }))
 app.use(cookieParser())
