@@ -1,22 +1,23 @@
-'use client';
+"use client";
 
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { 
-  Box, 
-  Typography, 
-  TextField, 
-  Button, 
-  CircularProgress, 
-  Alert, 
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  CircularProgress,
+  Alert,
   Paper,
   IconButton,
   InputAdornment,
-  Fade
+  Fade,
 } from "@mui/material";
 import { KeyRound, Eye, EyeOff, Mail } from "lucide-react";
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:2000";
+const BACKEND_URL =
+  process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:2000";
 
 export default function ResetPassword() {
   const router = useRouter();
@@ -29,13 +30,13 @@ export default function ResetPassword() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  
+
   // UI state
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isResending, setIsResending] = useState(false);
-  
+
   // Timer state
   const [timeLeft, setTimeLeft] = useState(120);
   const [isExpired, setIsExpired] = useState(false);
@@ -72,8 +73,12 @@ export default function ResetPassword() {
   };
 
   const passwordStrength = getPasswordStrength(newPassword);
-  const strengthText = ["Very Weak", "Weak", "Medium", "Strong"][passwordStrength];
-  const strengthColor = ["#FF4444", "#FFA500", "#FFD600", "#4CAF50"][passwordStrength];
+  const strengthText = ["Very Weak", "Weak", "Medium", "Strong"][
+    passwordStrength
+  ];
+  const strengthColor = ["#FF4444", "#FFA500", "#FFD600", "#4CAF50"][
+    passwordStrength
+  ];
 
   // Reset Password (Single step - OTP + New Password together)
   const handleResetPassword = async () => {
@@ -111,19 +116,19 @@ export default function ResetPassword() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           code: otp,
-          newPassword: newPassword
+          newPassword: newPassword,
         }),
       });
 
       const data = await res.json();
 
-      if (!res.ok) throw new Error(data.error || data.message || "Password reset failed");
+      if (!res.ok)
+        throw new Error(data.error || data.message || "Password reset failed");
 
       setSuccess("Password reset successfully! Redirecting to login...");
       setTimeout(() => router.push("/login"), 2000);
-
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -149,12 +154,12 @@ export default function ResetPassword() {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || data.message || "Resend failed");
+      if (!res.ok)
+        throw new Error(data.error || data.message || "Resend failed");
 
       setTimeLeft(120);
       setIsExpired(false);
       setSuccess("New OTP sent to your email!");
-
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -172,27 +177,29 @@ export default function ResetPassword() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        '&::before': {
+        "&::before": {
           content: '""',
-          position: 'absolute',
-          top: '-50%',
-          left: '-20%',
-          width: '80%',
-          height: '80%',
-          background: 'radial-gradient(circle, rgba(106,0,244,0.3) 0%, rgba(255,122,0,0.1) 100%)',
-          borderRadius: '50%',
-          filter: 'blur(100px)',
+          position: "absolute",
+          top: "-50%",
+          left: "-20%",
+          width: "80%",
+          height: "80%",
+          background:
+            "radial-gradient(circle, rgba(106,0,244,0.3) 0%, rgba(255,122,0,0.1) 100%)",
+          borderRadius: "50%",
+          filter: "blur(100px)",
         },
-        '&::after': {
+        "&::after": {
           content: '""',
-          position: 'absolute',
-          bottom: '-30%',
-          right: '-10%',
-          width: '70%',
-          height: '70%',
-          background: 'radial-gradient(circle, rgba(255,122,0.25) 0%, rgba(106,0,244,0.1) 100%)',
-          borderRadius: '50%',
-          filter: 'blur(100px)',
+          position: "absolute",
+          bottom: "-30%",
+          right: "-10%",
+          width: "70%",
+          height: "70%",
+          background:
+            "radial-gradient(circle, rgba(255,122,0.25) 0%, rgba(106,0,244,0.1) 100%)",
+          borderRadius: "50%",
+          filter: "blur(100px)",
         },
       }}
     >
@@ -219,7 +226,8 @@ export default function ResetPassword() {
               left: 0,
               right: 0,
               height: "4px",
-              background: "linear-gradient(90deg, #6A00F4 0%, #FFD600 50%, #FF7A00 100%)",
+              background:
+                "linear-gradient(90deg, #6A00F4 0%, #FFD600 50%, #FF7A00 100%)",
               borderRadius: "4px 4px 0 0",
             }}
           />
@@ -310,39 +318,67 @@ export default function ResetPassword() {
             onChange={(e) => setOtp(e.target.value)}
             fullWidth
             disabled={isExpired}
-            inputProps={{ maxLength: 6, style: { textAlign: 'center', fontSize: '1.2rem', letterSpacing: '4px' } }}
+            slotProps={{
+              htmlInput: {
+                maxLength: 6,
+                style: {
+                  textAlign: "center",
+                  fontSize: "1.2rem",
+                  letterSpacing: "4px",
+                },
+              },
+            }}
             placeholder="000000"
             sx={{
               mb: 3,
-              '& .MuiOutlinedInput-root': {
-                color: '#FFFFFF',
-                '& fieldset': { borderColor: 'rgba(255,255,255,0.08)' },
-                '&:hover fieldset': { borderColor: '#FFD600' },
-                '&.Mui-focused fieldset': { borderColor: '#FFD600' },
+              "& .MuiOutlinedInput-root": {
+                color: "#FFFFFF",
+                "& fieldset": { borderColor: "rgba(255,255,255,0.08)" },
+                "&:hover fieldset": { borderColor: "#FFD600" },
+                "&.Mui-focused fieldset": { borderColor: "#FFD600" },
               },
-              '& .MuiInputLabel-root': { color: '#A0A0A0' },
-              '& .MuiInputLabel-root.Mui-focused': { color: '#FFD600' },
+              "& .MuiInputLabel-root": { color: "#A0A0A0" },
+              "& .MuiInputLabel-root.Mui-focused": { color: "#FFD600" },
             }}
           />
 
           {/* Password Strength Indicator */}
           {newPassword && (
             <Box sx={{ mb: 2 }}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
-                <Typography sx={{ color: '#A0A0A0', fontSize: '0.75rem' }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  mb: 0.5,
+                }}
+              >
+                <Typography sx={{ color: "#A0A0A0", fontSize: "0.75rem" }}>
                   Password Strength
                 </Typography>
-                <Typography sx={{ color: strengthColor, fontSize: '0.75rem', fontWeight: 600 }}>
+                <Typography
+                  sx={{
+                    color: strengthColor,
+                    fontSize: "0.75rem",
+                    fontWeight: 600,
+                  }}
+                >
                   {strengthText}
                 </Typography>
               </Box>
-              <Box sx={{ height: 4, bgcolor: 'rgba(255,255,255,0.1)', borderRadius: 2, overflow: 'hidden' }}>
+              <Box
+                sx={{
+                  height: 4,
+                  bgcolor: "rgba(255,255,255,0.1)",
+                  borderRadius: 2,
+                  overflow: "hidden",
+                }}
+              >
                 <Box
                   sx={{
                     width: `${(passwordStrength / 4) * 100}%`,
-                    height: '100%',
+                    height: "100%",
                     bgcolor: strengthColor,
-                    transition: 'width 0.3s ease',
+                    transition: "width 0.3s ease",
                   }}
                 />
               </Box>
@@ -359,27 +395,29 @@ export default function ResetPassword() {
             disabled={isExpired}
             sx={{
               mb: 2,
-              '& .MuiOutlinedInput-root': {
-                color: '#FFFFFF',
-                '& fieldset': { borderColor: 'rgba(255,255,255,0.08)' },
-                '&:hover fieldset': { borderColor: '#FFD600' },
-                '&.Mui-focused fieldset': { borderColor: '#FFD600' },
+              "& .MuiOutlinedInput-root": {
+                color: "#FFFFFF",
+                "& fieldset": { borderColor: "rgba(255,255,255,0.08)" },
+                "&:hover fieldset": { borderColor: "#FFD600" },
+                "&.Mui-focused fieldset": { borderColor: "#FFD600" },
               },
-              '& .MuiInputLabel-root': { color: '#A0A0A0' },
-              '& .MuiInputLabel-root.Mui-focused': { color: '#FFD600' },
+              "& .MuiInputLabel-root": { color: "#A0A0A0" },
+              "& .MuiInputLabel-root.Mui-focused": { color: "#FFD600" },
             }}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    onClick={() => setShowPassword(!showPassword)}
-                    edge="end"
-                    sx={{ color: '#A0A0A0' }}
-                  >
-                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                  </IconButton>
-                </InputAdornment>
-              ),
+            slotProps={{
+              input: {
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() => setShowPassword(!showPassword)}
+                      edge="end"
+                      sx={{ color: "#A0A0A0" }}
+                    >
+                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              },
             }}
           />
 
@@ -393,27 +431,35 @@ export default function ResetPassword() {
             disabled={isExpired}
             sx={{
               mb: 3,
-              '& .MuiOutlinedInput-root': {
-                color: '#FFFFFF',
-                '& fieldset': { borderColor: 'rgba(255,255,255,0.08)' },
-                '&:hover fieldset': { borderColor: '#FFD600' },
-                '&.Mui-focused fieldset': { borderColor: '#FFD600' },
+              "& .MuiOutlinedInput-root": {
+                color: "#FFFFFF",
+                "& fieldset": { borderColor: "rgba(255,255,255,0.08)" },
+                "&:hover fieldset": { borderColor: "#FFD600" },
+                "&.Mui-focused fieldset": { borderColor: "#FFD600" },
               },
-              '& .MuiInputLabel-root': { color: '#A0A0A0' },
-              '& .MuiInputLabel-root.Mui-focused': { color: '#FFD600' },
+              "& .MuiInputLabel-root": { color: "#A0A0A0" },
+              "& .MuiInputLabel-root.Mui-focused": { color: "#FFD600" },
             }}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    edge="end"
-                    sx={{ color: '#A0A0A0' }}
-                  >
-                    {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                  </IconButton>
-                </InputAdornment>
-              ),
+            slotProps={{
+              input: {
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
+                      edge="end"
+                      sx={{ color: "#A0A0A0" }}
+                    >
+                      {showConfirmPassword ? (
+                        <EyeOff size={18} />
+                      ) : (
+                        <Eye size={18} />
+                      )}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              },
             }}
           />
 
@@ -422,22 +468,43 @@ export default function ResetPassword() {
             sx={{
               p: 2,
               borderRadius: 2,
-              bgcolor: 'rgba(255,255,255,0.02)',
-              border: '1px solid rgba(255,255,255,0.05)',
+              bgcolor: "rgba(255,255,255,0.02)",
+              border: "1px solid rgba(255,255,255,0.05)",
               mb: 3,
             }}
           >
-            <Typography sx={{ color: '#A0A0A0', fontSize: '0.75rem', mb: 1 }}>
+            <Typography sx={{ color: "#A0A0A0", fontSize: "0.75rem", mb: 1 }}>
               Password must contain:
             </Typography>
             <Box component="ul" sx={{ m: 0, pl: 2 }}>
-              <Typography component="li" sx={{ color: newPassword.length >= 8 ? '#4CAF50' : '#A0A0A0', fontSize: '0.75rem' }}>
+              <Typography
+                component="li"
+                sx={{
+                  color: newPassword.length >= 8 ? "#4CAF50" : "#A0A0A0",
+                  fontSize: "0.75rem",
+                }}
+              >
                 ✓ At least 8 characters
               </Typography>
-              <Typography component="li" sx={{ color: /[A-Z]/.test(newPassword) && /[a-z]/.test(newPassword) ? '#4CAF50' : '#A0A0A0', fontSize: '0.75rem' }}>
+              <Typography
+                component="li"
+                sx={{
+                  color:
+                    /[A-Z]/.test(newPassword) && /[a-z]/.test(newPassword)
+                      ? "#4CAF50"
+                      : "#A0A0A0",
+                  fontSize: "0.75rem",
+                }}
+              >
                 ✓ Uppercase & lowercase letters
               </Typography>
-              <Typography component="li" sx={{ color: /[0-9]/.test(newPassword) ? '#4CAF50' : '#A0A0A0', fontSize: '0.75rem' }}>
+              <Typography
+                component="li"
+                sx={{
+                  color: /[0-9]/.test(newPassword) ? "#4CAF50" : "#A0A0A0",
+                  fontSize: "0.75rem",
+                }}
+              >
                 ✓ At least one number
               </Typography>
             </Box>
@@ -467,12 +534,16 @@ export default function ResetPassword() {
               fontWeight: 700,
               py: 1.5,
               mb: 2,
-              '&:hover': { bgcolor: "#FFE44D", transform: 'translateY(-2px)' },
-              '&:disabled': { bgcolor: 'rgba(255,214,0,0.3)' },
-              transition: 'all 0.3s ease',
+              "&:hover": { bgcolor: "#FFE44D", transform: "translateY(-2px)" },
+              "&:disabled": { bgcolor: "rgba(255,214,0,0.3)" },
+              transition: "all 0.3s ease",
             }}
           >
-            {isSubmitting ? <CircularProgress size={24} sx={{ color: "#0B0F1A" }} /> : "Reset Password"}
+            {isSubmitting ? (
+              <CircularProgress size={24} sx={{ color: "#0B0F1A" }} />
+            ) : (
+              "Reset Password"
+            )}
           </Button>
 
           {/* Resend Button */}
@@ -486,10 +557,17 @@ export default function ResetPassword() {
                 borderColor: "#FFD600",
                 color: "#FFD600",
                 py: 1.5,
-                '&:hover': { borderColor: "#FFE44D", bgcolor: 'rgba(255,214,0,0.05)' },
+                "&:hover": {
+                  borderColor: "#FFE44D",
+                  bgcolor: "rgba(255,214,0,0.05)",
+                },
               }}
             >
-              {isResending ? <CircularProgress size={24} sx={{ color: "#FFD600" }} /> : "Resend New OTP"}
+              {isResending ? (
+                <CircularProgress size={24} sx={{ color: "#FFD600" }} />
+              ) : (
+                "Resend New OTP"
+              )}
             </Button>
           )}
         </Paper>
