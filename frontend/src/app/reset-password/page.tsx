@@ -225,7 +225,7 @@ export default function ResetPassword() {
           />
 
           {/* Header */}
-          <Box textAlign="center" mb={4}>
+          <Box sx={{ textAlign: "center", mb: 4 }}>
             <Box
               sx={{
                 width: 64,
