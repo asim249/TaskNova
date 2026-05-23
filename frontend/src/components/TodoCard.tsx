@@ -829,7 +829,7 @@ export const TodoCard: React.FC = () => {
                         >
                           Priority
                         </Typography>
-                        <Box mt={0.5}>
+                        <Box sx={{mt: 0.5}}>
                           <Chip
                             label={selectedTodo.priority}
                             size="small"
@@ -908,7 +908,7 @@ export const TodoCard: React.FC = () => {
                       >
                         Status
                       </Typography>
-                      <Box mt={0.5}>
+                      <Box sx={{mt: 0.5}}>
                         <Chip
                           label={
                             selectedTodo.completed ? "Completed ✓" : "Pending"
