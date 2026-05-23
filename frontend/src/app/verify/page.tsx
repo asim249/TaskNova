@@ -67,7 +67,7 @@ export default function VerifyPage() {
 
       const data = await res.json();
 
-      if (!res.ok) throw new Error(data.message || "Invalid OTP");
+      if (!res.ok) throw new Error(data.error || data.message || "Invalid OTP");
 
       setSuccess("Email verified successfully");
       setTimeout(() => router.push("/login"), 2000);
@@ -159,7 +159,7 @@ export default function VerifyPage() {
           onChange={(e) => setOtp(e.target.value)}
           fullWidth
           disabled={isExpired}
-          inputProps={{ maxLength: 6 }}
+          slotProps={{ htmlInput: { maxLength: 6 } }}
           sx={{
             "& .MuiOutlinedInput-root": {
               color: "#fff",
@@ -191,7 +191,7 @@ export default function VerifyPage() {
         {/* Resend Button — sirf tab dikhao jab expire ho ya 30 sec bache */}
         {(isExpired || timeLeft <= 30) && (
           <Button
-            onClick={handleResend}
+            // onClick={handleResend}
             disabled={isResending}
             fullWidth
             variant="outlined"

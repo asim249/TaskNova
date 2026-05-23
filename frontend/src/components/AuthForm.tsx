@@ -86,10 +86,6 @@ export const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
     setIsSubmitting(true);
 
     try {
-      // ===================================================================
-      // 🚀 REAL NESTJS BACKEND INTEGRATION VIA JAVASCRIPT FETCH
-      // ===================================================================
-      
       // 1. LOGIN FLOW
       if (mode === "login") {
         dispatch(loginStart());
@@ -107,9 +103,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
           throw new Error(data.message || "Invalid credentials");
         }
 
-        // Token aur user details dynamic fetch response se store honge
         dispatch(loginSuccess(data.user)); 
-        // Token local storage ya cookies me handle karne ke liye: localStorage.setItem('token', data.accessToken);
         router.push("/");
       } 
       
@@ -117,8 +111,6 @@ export const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
       else if (mode === "signup") {
         if (!isOtpStep) {
           dispatch(signupStart());
-
-          // Step i & ii: User signup request -> Backend sends OTP to email [cite: 15, 16]
           const res = await fetch(`${BACKEND_URL}/api/auth/register`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -132,7 +124,6 @@ export const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
           setSuccessMsg("An OTP has been sent to your email. Please verify.");
           router.push(`/verify?email=${encodeURIComponent(email)}`);
         } else {
-          // Step iii: User verify the otp [cite: 17]
           const res = await fetch(`${BACKEND_URL}/api/auth/verify-email`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -167,7 +158,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
           setSuccessMsg("OTP sent to your email registry.");
           router.push('/reset-password')
         } else {
-          // Step ii: User enters OTP and changes password if correct [cite: 23]
+          //User enters OTP and changes password if correct [cite: 23]
           const res = await fetch(`${BACKEND_URL}/api/auth/reset-password`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },

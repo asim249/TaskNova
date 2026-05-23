@@ -25,8 +25,8 @@ import {
   FormControl,
   InputLabel,
 } from "@mui/material";
-import { Eye, Trash2, Pencil, LogOut, X  } from "lucide-react";
-import { useRouter } from "next/navigation"; 
+import { Eye, Trash2, Pencil, LogOut, X } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/store/hooks";
 import { logout as logoutAction } from "@/store/authSlice";
 
@@ -64,21 +64,21 @@ export const TodoCard: React.FC = () => {
   const [editDueDate, setEditDueDate] = useState("");
 
   const router = useRouter();
-  const dispatch = useAppDispatch(); 
+  const dispatch = useAppDispatch();
   const logout = async () => {
     try {
       const response = await fetch(`${BACKEND_URL}/api/auth/logout`, {
         method: "GET",
         credentials: "include",
       });
-      if(response.ok){
+      if (response.ok) {
         dispatch(logoutAction());
-        router.push('/login')
+        router.push("/login");
       }
     } catch (err) {
       console.error("Error logging out:", err);
     }
-  }
+  };
 
   // Fetch all todos
   const fetchTodos = async () => {
@@ -199,9 +199,10 @@ export const TodoCard: React.FC = () => {
     setEditDueDate(todo.dueDate || "");
   };
 
-  const handleUpdateTodo = async (id: string, e: React.FormEvent) => {
-    e.preventDefault()
-    // e.preventDefault();
+  const handleUpdateTodo = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingTodo) return;
+    const id = editingTodo._id;
     if (!editTitle.trim()) {
       setError("Title is required");
       return;
@@ -264,45 +265,45 @@ export const TodoCard: React.FC = () => {
     >
       <Container maxWidth="lg">
         {/* Header */}
-       <Box
-  sx={{
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    mb: 3,
-    pb: 2,
-    borderBottom: "1px solid rgba(255,255,255,0.08)",
-  }}
->
-  <Typography
-    variant="h4"
-    component="h1"
-    sx={{
-      color: "#FFFFFF",
-      fontWeight: 600,
-    }}
-  >
-    Todo Manager
-  </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 3,
+            pb: 2,
+            borderBottom: "1px solid rgba(255,255,255,0.08)",
+          }}
+        >
+          <Typography
+            variant="h4"
+            component="h1"
+            sx={{
+              color: "#FFFFFF",
+              fontWeight: 600,
+            }}
+          >
+            Todo Manager
+          </Typography>
 
-  <Button
-    variant="outlined"
-    color="error"
-    onClick={logout} // Aapka logout function yahan chalega
-    startIcon={<LogOut size={16} />} // Lucide-react ka icon (Agar use kar rahe hain)
-    sx={{
-      textTransform: "none",
-      borderColor: "rgba(255, 68, 68, 0.5)",
-      color: "#FF4444",
-      "&:hover": {
-        borderColor: "#FF4444",
-        backgroundColor: "rgba(255, 68, 68, 0.05)",
-      },
-    }}
-  >
-    Logout
-  </Button>
-</Box>
+          <Button
+            variant="outlined"
+            color="error"
+            onClick={logout} // Aapka logout function yahan chalega
+            startIcon={<LogOut size={16} />} // Lucide-react ka icon (Agar use kar rahe hain)
+            sx={{
+              textTransform: "none",
+              borderColor: "rgba(255, 68, 68, 0.5)",
+              color: "#FF4444",
+              "&:hover": {
+                borderColor: "#FF4444",
+                backgroundColor: "rgba(255, 68, 68, 0.05)",
+              },
+            }}
+          >
+            Logout
+          </Button>
+        </Box>
 
         {/* Error Alert */}
         {error && (
@@ -337,7 +338,7 @@ export const TodoCard: React.FC = () => {
             Add New Todo
           </Typography>
 
-          <form onSubmit={handleAddTodo}>
+          <Box component="form" onSubmit={handleAddTodo}>
             <Stack spacing={2}>
               <TextField
                 fullWidth
@@ -425,7 +426,7 @@ export const TodoCard: React.FC = () => {
                 Add Todo
               </Button>
             </Stack>
-          </form>
+          </Box>
         </Paper>
 
         {/* Todo Table */}
@@ -551,7 +552,7 @@ export const TodoCard: React.FC = () => {
               Edit Todo
             </Typography>
 
-            <form onSubmit={handleUpdateTodo}>
+            <Box component="form" onSubmit={handleUpdateTodo}>
               <Stack spacing={2}>
                 <TextField
                   fullWidth
@@ -623,301 +624,310 @@ export const TodoCard: React.FC = () => {
                   </Button>
                 </Stack>
               </Stack>
-            </form>
+            </Box>
           </Paper>
         )}
 
         {/* View Single Todo Details */}
-{/* View Single Todo Details */}
-{selectedTodo && (
-  <Box
-    sx={{
-      position: 'fixed',
-      bottom: 24,
-      right: 24,
-      zIndex: 1000,
-      maxWidth: '400px',
-      width: 'calc(100% - 48px)',
-      animation: 'slideIn 0.3s ease-out',
-      '@keyframes slideIn': {
-        from: {
-          transform: 'translateX(100%)',
-          opacity: 0,
-        },
-        to: {
-          transform: 'translateX(0)',
-          opacity: 1,
-        },
-      },
-    }}
-  >
-    <Paper
-      elevation={8}
-      sx={{
-        bgcolor: 'rgba(11, 15, 26, 0.95)',
-        backdropFilter: 'blur(10px)',
-        border: '1px solid rgba(255, 214, 0, 0.3)',
-        borderRadius: 3,
-        overflow: 'hidden',
-        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 214, 0, 0.1)',
-        transition: 'all 0.3s ease',
-        '&:hover': {
-          borderColor: '#FFD600',
-          boxShadow: '0 12px 48px rgba(0, 0, 0, 0.5), 0 0 0 2px rgba(255, 214, 0, 0.2)',
-          transform: 'translateY(-4px)',
-        },
-      }}
-    >
-      {/* Gradient Header Bar */}
-      <Box
-        sx={{
-          height: '4px',
-          background: 'linear-gradient(90deg, #FFD600 0%, #FF7A00 50%, #6A00F4 100%)',
-        }}
-      />
-
-      <Card sx={{ bgcolor: 'transparent' }}>
-        <CardContent sx={{ p: 3 }}>
-          {/* Header with Icon */}
+        {/* View Single Todo Details */}
+        {selectedTodo && (
           <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-            mb={2.5}
-          >
-            <Box display="flex" alignItems="center" gap={1}>
-              <Box
-                sx={{
-                  width: 32,
-                  height: 32,
-                  borderRadius: '8px',
-                  bgcolor: 'rgba(255, 214, 0, 0.1)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  border: '1px solid rgba(255, 214, 0, 0.2)',
-                }}
-              >
-                <Eye size={18} style={{ color: '#FFD600' }} />
-              </Box>
-              <Typography
-                variant="h6"
-                sx={{
-                  color: '#FFD600',
-                  fontWeight: 700,
-                  fontFamily: '"Space Grotesk", sans-serif',
-                  letterSpacing: '-0.02em',
-                }}
-              >
-                Todo Details
-              </Typography>
-            </Box>
-            <Button
-              size="small"
-              onClick={() => setSelectedTodo(null)}
-              sx={{
-                color: '#A0A0A0',
-                minWidth: 'auto',
-                borderRadius: '8px',
-                '&:hover': {
-                  color: '#FFD600',
-                  bgcolor: 'rgba(255, 214, 0, 0.1)',
-                  transform: 'scale(1.05)',
+            sx={{
+              position: "fixed",
+              bottom: 24,
+              right: 24,
+              zIndex: 1000,
+              maxWidth: "400px",
+              width: "calc(100% - 48px)",
+              animation: "slideIn 0.3s ease-out",
+              "@keyframes slideIn": {
+                from: {
+                  transform: "translateX(100%)",
+                  opacity: 0,
                 },
-                transition: 'all 0.2s ease',
+                to: {
+                  transform: "translateX(0)",
+                  opacity: 1,
+                },
+              },
+            }}
+          >
+            <Paper
+              elevation={8}
+              sx={{
+                bgcolor: "rgba(11, 15, 26, 0.95)",
+                backdropFilter: "blur(10px)",
+                border: "1px solid rgba(255, 214, 0, 0.3)",
+                borderRadius: 3,
+                overflow: "hidden",
+                boxShadow:
+                  "0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 214, 0, 0.1)",
+                transition: "all 0.3s ease",
+                "&:hover": {
+                  borderColor: "#FFD600",
+                  boxShadow:
+                    "0 12px 48px rgba(0, 0, 0, 0.5), 0 0 0 2px rgba(255, 214, 0, 0.2)",
+                  transform: "translateY(-4px)",
+                },
               }}
             >
-              <X size={16} />
-            </Button>
+              {/* Gradient Header Bar */}
+              <Box
+                sx={{
+                  height: "4px",
+                  background:
+                    "linear-gradient(90deg, #FFD600 0%, #FF7A00 50%, #6A00F4 100%)",
+                }}
+              />
+
+              <Card sx={{ bgcolor: "transparent" }}>
+                <CardContent sx={{ p: 3 }}>
+                  {/* Header with Icon */}
+                  <Box
+                    display="flex"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    mb={2.5}
+                  >
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <Box
+                        sx={{
+                          width: 32,
+                          height: 32,
+                          borderRadius: "8px",
+                          bgcolor: "rgba(255, 214, 0, 0.1)",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          border: "1px solid rgba(255, 214, 0, 0.2)",
+                        }}
+                      >
+                        <Eye size={18} style={{ color: "#FFD600" }} />
+                      </Box>
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          color: "#FFD600",
+                          fontWeight: 700,
+                          fontFamily: '"Space Grotesk", sans-serif',
+                          letterSpacing: "-0.02em",
+                        }}
+                      >
+                        Todo Details
+                      </Typography>
+                    </Box>
+                    <Button
+                      size="small"
+                      onClick={() => setSelectedTodo(null)}
+                      sx={{
+                        color: "#A0A0A0",
+                        minWidth: "auto",
+                        borderRadius: "8px",
+                        "&:hover": {
+                          color: "#FFD600",
+                          bgcolor: "rgba(255, 214, 0, 0.1)",
+                          transform: "scale(1.05)",
+                        },
+                        transition: "all 0.2s ease",
+                      }}
+                    >
+                      <X size={16} />
+                    </Button>
+                  </Box>
+
+                  <Stack spacing={2.5}>
+                    {/* Title Section */}
+                    <Box
+                      sx={{
+                        p: 1.5,
+                        borderRadius: 2,
+                        bgcolor: "rgba(255, 255, 255, 0.02)",
+                        border: "1px solid rgba(255, 255, 255, 0.05)",
+                      }}
+                    >
+                      <Typography
+                        variant="caption"
+                        sx={{
+                          color: "#A0A0A0",
+                          textTransform: "uppercase",
+                          letterSpacing: "0.5px",
+                          fontWeight: 600,
+                          fontSize: "0.65rem",
+                        }}
+                      >
+                        Title
+                      </Typography>
+                      <Typography
+                        variant="body1"
+                        sx={{
+                          color: "#FFFFFF",
+                          fontWeight: 500,
+                          mt: 0.5,
+                          wordBreak: "break-word",
+                        }}
+                      >
+                        {selectedTodo.title}
+                      </Typography>
+                    </Box>
+
+                    {/* Description Section */}
+                    {selectedTodo.description && (
+                      <Box
+                        sx={{
+                          p: 1.5,
+                          borderRadius: 2,
+                          bgcolor: "rgba(255, 255, 255, 0.02)",
+                          border: "1px solid rgba(255, 255, 255, 0.05)",
+                        }}
+                      >
+                        <Typography
+                          variant="caption"
+                          sx={{
+                            color: "#A0A0A0",
+                            textTransform: "uppercase",
+                            letterSpacing: "0.5px",
+                            fontWeight: 600,
+                            fontSize: "0.65rem",
+                          }}
+                        >
+                          Description
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            color: "#A0A0A0",
+                            mt: 0.5,
+                            lineHeight: 1.6,
+                            wordBreak: "break-word",
+                          }}
+                        >
+                          {selectedTodo.description}
+                        </Typography>
+                      </Box>
+                    )}
+
+                    {/* Priority & Due Date Row */}
+                    <Stack direction="row" spacing={2}>
+                      <Box
+                        sx={{
+                          flex: 1,
+                          p: 1.5,
+                          borderRadius: 2,
+                          bgcolor: "rgba(255, 255, 255, 0.02)",
+                          border: "1px solid rgba(255, 255, 255, 0.05)",
+                        }}
+                      >
+                        <Typography
+                          variant="caption"
+                          sx={{
+                            color: "#A0A0A0",
+                            textTransform: "uppercase",
+                            letterSpacing: "0.5px",
+                            fontWeight: 600,
+                            fontSize: "0.65rem",
+                          }}
+                        >
+                          Priority
+                        </Typography>
+                        <Box mt={0.5}>
+                          <Chip
+                            label={selectedTodo.priority}
+                            size="small"
+                            color={getPriorityColor(selectedTodo.priority)}
+                            sx={{
+                              textTransform: "capitalize",
+                              fontWeight: 600,
+                              "& .MuiChip-label": { px: 1.5 },
+                            }}
+                          />
+                        </Box>
+                      </Box>
+
+                      {selectedTodo.dueDate && (
+                        <Box
+                          sx={{
+                            flex: 1,
+                            p: 1.5,
+                            borderRadius: 2,
+                            bgcolor: "rgba(255, 255, 255, 0.02)",
+                            border: "1px solid rgba(255, 255, 255, 0.05)",
+                          }}
+                        >
+                          <Typography
+                            variant="caption"
+                            sx={{
+                              color: "#A0A0A0",
+                              textTransform: "uppercase",
+                              letterSpacing: "0.5px",
+                              fontWeight: 600,
+                              fontSize: "0.65rem",
+                            }}
+                          >
+                            Due Date
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              color: "#FFFFFF",
+                              fontWeight: 500,
+                              mt: 0.5,
+                            }}
+                          >
+                            {selectedTodo.dueDate
+                              ? new Date(
+                                  selectedTodo.dueDate,
+                                ).toLocaleDateString("en-US", {
+                                  year: "numeric",
+                                  month: "short",
+                                  day: "numeric",
+                                })
+                              : "-"}
+                          </Typography>
+                        </Box>
+                      )}
+                    </Stack>
+
+                    {/* Status Section */}
+                    <Box
+                      sx={{
+                        p: 1.5,
+                        borderRadius: 2,
+                        bgcolor: "rgba(255, 255, 255, 0.02)",
+                        border: "1px solid rgba(255, 255, 255, 0.05)",
+                      }}
+                    >
+                      <Typography
+                        variant="caption"
+                        sx={{
+                          color: "#A0A0A0",
+                          textTransform: "uppercase",
+                          letterSpacing: "0.5px",
+                          fontWeight: 600,
+                          fontSize: "0.65rem",
+                        }}
+                      >
+                        Status
+                      </Typography>
+                      <Box mt={0.5}>
+                        <Chip
+                          label={
+                            selectedTodo.completed ? "Completed ✓" : "Pending"
+                          }
+                          size="small"
+                          color={selectedTodo.completed ? "success" : "warning"}
+                          sx={{
+                            fontWeight: 600,
+                            "& .MuiChip-label": { px: 1.5 },
+                          }}
+                        />
+                      </Box>
+                    </Box>
+                  </Stack>
+                </CardContent>
+              </Card>
+            </Paper>
           </Box>
-
-          <Stack spacing={2.5}>
-            {/* Title Section */}
-            <Box
-              sx={{
-                p: 1.5,
-                borderRadius: 2,
-                bgcolor: 'rgba(255, 255, 255, 0.02)',
-                border: '1px solid rgba(255, 255, 255, 0.05)',
-              }}
-            >
-              <Typography
-                variant="caption"
-                sx={{
-                  color: '#A0A0A0',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.5px',
-                  fontWeight: 600,
-                  fontSize: '0.65rem',
-                }}
-              >
-                Title
-              </Typography>
-              <Typography
-                variant="body1"
-                sx={{
-                  color: '#FFFFFF',
-                  fontWeight: 500,
-                  mt: 0.5,
-                  wordBreak: 'break-word',
-                }}
-              >
-                {selectedTodo.title}
-              </Typography>
-            </Box>
-
-            {/* Description Section */}
-            {selectedTodo.description && (
-              <Box
-                sx={{
-                  p: 1.5,
-                  borderRadius: 2,
-                  bgcolor: 'rgba(255, 255, 255, 0.02)',
-                  border: '1px solid rgba(255, 255, 255, 0.05)',
-                }}
-              >
-                <Typography
-                  variant="caption"
-                  sx={{
-                    color: '#A0A0A0',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.5px',
-                    fontWeight: 600,
-                    fontSize: '0.65rem',
-                  }}
-                >
-                  Description
-                </Typography>
-                <Typography
-                  variant="body2"
-                  sx={{
-                    color: '#A0A0A0',
-                    mt: 0.5,
-                    lineHeight: 1.6,
-                    wordBreak: 'break-word',
-                  }}
-                >
-                  {selectedTodo.description}
-                </Typography>
-              </Box>
-            )}
-
-            {/* Priority & Due Date Row */}
-            <Stack direction="row" spacing={2}>
-              <Box
-                sx={{
-                  flex: 1,
-                  p: 1.5,
-                  borderRadius: 2,
-                  bgcolor: 'rgba(255, 255, 255, 0.02)',
-                  border: '1px solid rgba(255, 255, 255, 0.05)',
-                }}
-              >
-                <Typography
-                  variant="caption"
-                  sx={{
-                    color: '#A0A0A0',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.5px',
-                    fontWeight: 600,
-                    fontSize: '0.65rem',
-                  }}
-                >
-                  Priority
-                </Typography>
-                <Box mt={0.5}>
-                  <Chip
-                    label={selectedTodo.priority}
-                    size="small"
-                    color={getPriorityColor(selectedTodo.priority)}
-                    sx={{
-                      textTransform: 'capitalize',
-                      fontWeight: 600,
-                      '& .MuiChip-label': { px: 1.5 },
-                    }}
-                  />
-                </Box>
-              </Box>
-
-              {selectedTodo.dueDate && (
-                <Box
-                  sx={{
-                    flex: 1,
-                    p: 1.5,
-                    borderRadius: 2,
-                    bgcolor: 'rgba(255, 255, 255, 0.02)',
-                    border: '1px solid rgba(255, 255, 255, 0.05)',
-                  }}
-                >
-                  <Typography
-                    variant="caption"
-                    sx={{
-                      color: '#A0A0A0',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.5px',
-                      fontWeight: 600,
-                      fontSize: '0.65rem',
-                    }}
-                  >
-                    Due Date
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      color: '#FFFFFF',
-                      fontWeight: 500,
-                      mt: 0.5,
-                    }}
-                  >
-                    {selectedTodo.dueDate ? new Date(selectedTodo.dueDate).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'short',
-                      day: 'numeric',
-                    }) : '-'}
-                  </Typography>
-                </Box>
-              )}
-            </Stack>
-
-            {/* Status Section */}
-            <Box
-              sx={{
-                p: 1.5,
-                borderRadius: 2,
-                bgcolor: 'rgba(255, 255, 255, 0.02)',
-                border: '1px solid rgba(255, 255, 255, 0.05)',
-              }}
-            >
-              <Typography
-                variant="caption"
-                sx={{
-                  color: '#A0A0A0',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.5px',
-                  fontWeight: 600,
-                  fontSize: '0.65rem',
-                }}
-              >
-                Status
-              </Typography>
-              <Box mt={0.5}>
-                <Chip
-                  label={selectedTodo.completed ? "Completed ✓" : "Pending"}
-                  size="small"
-                  color={selectedTodo.completed ? "success" : "warning"}
-                  sx={{
-                    fontWeight: 600,
-                    '& .MuiChip-label': { px: 1.5 },
-                  }}
-                />
-              </Box>
-            </Box>
-          </Stack>
-        </CardContent>
-      </Card>
-    </Paper>
-  </Box>
-)}
+        )}
       </Container>
     </Box>
   );
