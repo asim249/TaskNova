@@ -684,12 +684,13 @@ export const TodoCard: React.FC = () => {
                 <CardContent sx={{ p: 3 }}>
                   {/* Header with Icon */}
                   <Box
-                    display="flex"
-                    justifyContent="space-between"
-                    alignItems="center"
-                    mb={2.5}
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      mb: 2.5,}}
                   >
-                    <Box display="flex" alignItems="center" gap={1}>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                       <Box
                         sx={{
                           width: 32,
